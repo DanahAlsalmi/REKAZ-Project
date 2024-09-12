@@ -1,7 +1,10 @@
 package com.example.rekazfinalproject.Controller;
 
 
+import com.example.rekazfinalproject.Api.ApiResponse;
 import com.example.rekazfinalproject.DTO.InvestorDTO;
+import com.example.rekazfinalproject.Model.Bid;
+import com.example.rekazfinalproject.Service.BidService;
 import com.example.rekazfinalproject.Service.InvestorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ public class InvestorController {
 
     //*** All CRUD Done by Danah ****
     private final InvestorService investorService;
+    private final BidService bidService;
 
     @GetMapping("/get")
     public ResponseEntity getAllInvestor(){
@@ -37,5 +41,18 @@ public class InvestorController {
     public ResponseEntity deleteInvestor(@PathVariable Integer id) {
         investorService.deleteInvestor(id);
         return ResponseEntity.status(200).body("Investor deleted successfully");
+    }
+
+
+    @PostMapping("/add-bid/{investorId}/{projectId}")
+    public ResponseEntity addBid(@PathVariable int investorId  , @PathVariable int projectId , @Valid @RequestBody Bid bid) {
+        investorService.addBid(investorId,projectId,bid);
+        return ResponseEntity.status(200).body(new ApiResponse("Bid added successfully"));
+    }
+
+    @PutMapping("/edit-bid/{investorId}/{bidId}")
+    public ResponseEntity editBid(@PathVariable int investorId  , @PathVariable int bidId , @Valid @RequestBody Bid bid){
+        investorService.editBid(investorId,bidId,bid);
+        return ResponseEntity.status(200).body(new ApiResponse("Bid edited successfully"));
     }
 }

@@ -44,4 +44,10 @@ public class UserController {
     }
 
 
+    @PutMapping("/activate/{adminId}/{userId}")
+    public ResponseEntity activateUser(@PathVariable Integer adminId,@PathVariable Integer userId){
+        userService.activateUser(adminId,userId);
+        return ResponseEntity.status(200).body("User activated successfully");
+    }
+
 }

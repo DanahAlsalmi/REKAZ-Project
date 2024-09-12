@@ -22,15 +22,15 @@ public class ContractController {
         return ResponseEntity.status(200).body(contractService.getAllContract());
     }
 
-    @PostMapping("/add-contract/{investorid}/{ownerid}/{projectid}")
+    @PostMapping("/add-contract/{investorId}/{ownerId}/{projectId}")
 
-    public ResponseEntity addContract(@PathVariable int investorid , @PathVariable int ownerid , @PathVariable int projectid , @Valid @RequestBody ContractDTO contractDTO){
-        contractService.addContract(investorid,ownerid,projectid,contractDTO);
+    public ResponseEntity addContract(@PathVariable Integer investorId , @PathVariable Integer ownerId , @PathVariable Integer projectId , @Valid @RequestBody ContractDTO contractDTO){
+        contractService.addContract(investorId,ownerId,projectId,contractDTO);
         return ResponseEntity.status(200).body("contract added successfully");
     }
 
     @PutMapping("/update-contract/{id}")
-    public ResponseEntity updateContract(@PathVariable int id, @Valid  @RequestBody Contract contract){
+    public ResponseEntity updateContract(@PathVariable Integer id, @Valid  @RequestBody Contract contract){
         contractService.updateContract(id, contract);
         return ResponseEntity.status(200).body("contract updated successfully");
     }
@@ -40,4 +40,16 @@ public class ContractController {
 //        contractService.deleteContract(id);
 //        return ResponseEntity.status(200).body("contract deleted successfully");
 //    }
+
+    @PostMapping("/contracts/{contractId}/{investorId}/approve")
+    public ResponseEntity approveContract(@PathVariable Integer contractId, @PathVariable Integer investorId) {
+        contractService.approveContract(contractId, investorId);
+        return ResponseEntity.status(200).body("Contract approved successfully");
+    }
+
+    @PostMapping("/contracts/{contractId}/{investorId}/reject")
+    public ResponseEntity rejectContract(@PathVariable Integer contractId, @PathVariable Integer investorId) {
+        contractService.rejectContract(contractId, investorId);
+        return ResponseEntity.status(200).body("Contract rejected successfully");
+    }
 }

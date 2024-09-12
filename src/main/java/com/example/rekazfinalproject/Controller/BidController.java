@@ -22,20 +22,20 @@ public class BidController {
         return ResponseEntity.status(200).body(bidService.findAllBids());
     }
 
-    @PostMapping("/add-bid/{projectid}")
-    public ResponseEntity addBid(@PathVariable int investorid  , @PathVariable int projectid , @Valid @RequestBody Bid bid) {
-        bidService.addBid(investorid,projectid,bid);
+    @PostMapping("/add-bid/{investorId}/{projectId}")
+    public ResponseEntity addBid(@PathVariable Integer investorId  , @PathVariable Integer projectId , @Valid @RequestBody Bid bid) {
+        bidService.addBid(investorId,projectId,bid);
         return ResponseEntity.status(200).body("Bid added");
     }
 
     @PutMapping("/update-bid/{id}")
-    public ResponseEntity updateBid(@PathVariable int id, @Valid  @RequestBody Bid bid) {
+    public ResponseEntity updateBid(@PathVariable Integer id, @Valid  @RequestBody Bid bid) {
         bidService.updateBid(id,bid);
         return ResponseEntity.status(200).body("Bid updated");
     }
 
     @DeleteMapping("/delete-bid/{id}")
-    public ResponseEntity deleteBid(@PathVariable int id) {
+    public ResponseEntity deleteBid(@PathVariable Integer id) {
         bidService.deleteBid(id);
         return ResponseEntity.status(200).body("Bid deleted");
     }

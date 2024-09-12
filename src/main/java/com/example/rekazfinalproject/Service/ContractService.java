@@ -1,16 +1,9 @@
 package com.example.rekazfinalproject.Service;
 
-
 import com.example.rekazfinalproject.Api.ApiException;
 import com.example.rekazfinalproject.DTO.ContractDTO;
-import com.example.rekazfinalproject.Model.Contract;
-import com.example.rekazfinalproject.Model.Investor;
-import com.example.rekazfinalproject.Model.Owner;
-import com.example.rekazfinalproject.Model.Project;
-import com.example.rekazfinalproject.Repository.ContractRepository;
-import com.example.rekazfinalproject.Repository.InvestorRepository;
-import com.example.rekazfinalproject.Repository.OwnerRepository;
-import com.example.rekazfinalproject.Repository.ProjectRepository;
+import com.example.rekazfinalproject.Model.*;
+import com.example.rekazfinalproject.Repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +20,14 @@ public class ContractService {
     private final InvestorRepository investorRepository;
     private final OwnerRepository ownerRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
+    private final BidRepository bidRepository;
 
     public List<Contract> getAllContract(){
         return contractRepository.findAll();
     }
 
-    public void addContract(int investorId , int ownerId , int projectId , ContractDTO contractDTO){
+    public void addContract(Integer investorId , Integer ownerId , Integer projectId , ContractDTO contractDTO){
         Investor investor = investorRepository.findInvestorById(investorId);
         if(investor==null){
             throw new ApiException("investor not found");
@@ -48,15 +43,27 @@ public class ContractService {
             throw new ApiException("project not found");
         }
 
+        User investorUser = userRepository.findUserById(investorId);
+        if(investorUser.isActive()==false){
+            throw new ApiException("investor is not active");
+        }
 
+        User ownerUser = userRepository.findUserById(ownerId);
+        if(ownerUser.isActive()==false){
+            throw new ApiException("owner is not active");
+        }
+        Bid bid=bidRepository.findBidById(projectId);
 
+        if (!bid.getStatus().equalsIgnoreCase("Approved")){
+            throw new ApiException("bid not approved");
+        }
         Contract contract = new Contract(null,contractDTO.getTerms(), LocalDate.now(),contractDTO.getEndDate(),contractDTO.getStatus(),investor,owner,project);
         contractRepository.save(contract);
 
     }
 
 
-    public void updateContract( int id , Contract contract){
+    public void updateContract( Integer id , Contract contract){
         Contract contract1 = contractRepository.findContractById(id);
         if(contract1==null){
             throw new ApiException("contract not found");
@@ -75,6 +82,51 @@ public class ContractService {
             throw new ApiException("contract not found");
         }
         contractRepository.delete(contract1);
+    }
+
+    //Dana
+    public void approveContract(Integer contractId, Integer investorId) {
+        User investorUser = userRepository.findUserById(investorId);
+        if (investorUser == null) {
+            throw new ApiException("Investor not found");
+        }
+
+        Contract contract = contractRepository.findContractById(contractId);
+        if (contract == null) {
+            throw new ApiException("Contract not found");
+        }
+
+        if ("APPROVED".equalsIgnoreCase(contract.getStatus())) {
+            throw new ApiException("Contract is already approved");
+        } else if ("REJECTED".equalsIgnoreCase(contract.getStatus())) {
+            throw new ApiException("Contract has been rejected");
+        }
+
+        contract.setStatus("APPROVED");
+//        contract.setApprovalDate(LocalDate.now()); // Record the approval date
+        contractRepository.save(contract);
+    }
+
+    //Dana
+    public void rejectContract(Integer contractId, Integer investorId) {
+        User investorUser = userRepository.findUserById(investorId);
+        if (investorUser == null) {
+            throw new ApiException("Investor not found");
+        }
+
+        Contract contract = contractRepository.findContractById(contractId);
+        if (contract == null) {
+            throw new ApiException("Contract not found");
+        }
+
+        if ("APPROVED".equalsIgnoreCase(contract.getStatus())) {
+            throw new ApiException("Contract is already approved");
+        } else if ("REJECTED".equalsIgnoreCase(contract.getStatus())) {
+            throw new ApiException("Contract has been rejected");
+        }
+        contract.setStatus("REJECTED");
+//        contract.setRejectionDate(LocalDate.now()); // Record the rejection date if needed
+        contractRepository.save(contract);
     }
 
 

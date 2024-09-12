@@ -44,6 +44,9 @@ public class User {
     @Check(constraints = "role IN ('OWNER','INVESTOR','ADMIN')")
     private String role;
 
+//    @AssertFalse
+    private boolean isActive;
+
 
     @OneToOne(cascade = CascadeType.ALL , mappedBy = "user")
     @PrimaryKeyJoinColumn

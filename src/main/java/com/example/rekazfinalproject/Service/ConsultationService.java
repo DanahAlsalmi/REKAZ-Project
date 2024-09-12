@@ -2,7 +2,9 @@ package com.example.rekazfinalproject.Service;
 
 import com.example.rekazfinalproject.Api.ApiException;
 import com.example.rekazfinalproject.Model.Consultation;
+import com.example.rekazfinalproject.Model.User;
 import com.example.rekazfinalproject.Repository.ConsultationRepository;
+import com.example.rekazfinalproject.Repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConsultationService {
     private final ConsultationRepository consultationRepository;
+    public final ProjectRepository projectRepository;
 
     public List<Consultation> getAllConsultations() {
         return consultationRepository.findAll();
@@ -41,5 +44,9 @@ public class ConsultationService {
         }
         consultationRepository.delete(consultation1);
     }
+
+
+
+
 
 }

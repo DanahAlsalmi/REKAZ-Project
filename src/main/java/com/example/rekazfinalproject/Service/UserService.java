@@ -49,4 +49,22 @@ public class UserService {
         userRepository.delete(u);
     }
 
+    //Danah
+    //Approve CR to activate account
+    public void activateUser(Integer adminId,Integer userId) {
+        User adminUser = userRepository.findUserById(adminId);
+        if (adminUser == null || !"ADMIN".equals(adminUser.getRole())) {
+            throw new ApiException("Only admins can activate users");
+        }
+
+        User u = userRepository.findUserById(userId);
+        if (u == null) {
+            throw new ApiException("User not found");
+        }
+
+        u.setActive(true);
+        userRepository.save(u);
+    }
+
+
 }

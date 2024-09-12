@@ -20,6 +20,8 @@ public class OwnerDTO {
     @NotEmpty(message = "Email is required")
     private String email;
 
+    private boolean isActive;
+
     @NotNull(message = "Commercial Register is required")
     private int commercialRegister;
 

@@ -20,20 +20,20 @@ public class ProjectController {
         return ResponseEntity.status(200).body(projectService.getAllProjects());
     }
 
-    @PostMapping("/add-project/{ownerid}")
-    public ResponseEntity addProject(@PathVariable int ownerid , @Valid @RequestBody Project project) {
-        projectService.addProject( ownerid , project);
+    @PostMapping("/add-project/{ownerId}")
+    public ResponseEntity addProject(@PathVariable Integer ownerId , @Valid @RequestBody Project project) {
+        projectService.addProject( ownerId , project);
         return ResponseEntity.status(200).body("project added successfully");
     }
 
     @PutMapping("/update-project/{id}")
-    public ResponseEntity updateProject( @PathVariable  int id , @Valid  @RequestBody Project project) {
+    public ResponseEntity updateProject( @PathVariable  Integer id , @Valid  @RequestBody Project project) {
         projectService.updateProject(id, project);
         return ResponseEntity.status(200).body("project updated successfully");
     }
 
     @DeleteMapping("/delete-project/{id}")
-    public ResponseEntity deleteProject( @PathVariable  int id) {
+    public ResponseEntity deleteProject( @PathVariable  Integer id) {
         projectService.deleteProject(id);
         return ResponseEntity.status(200).body("project deleted successfully");
     }

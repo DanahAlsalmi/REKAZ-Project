@@ -10,5 +10,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     Project findProjectById(int id);
 
+    Integer countProjectByOwnerId(Integer id);
+
 
 }

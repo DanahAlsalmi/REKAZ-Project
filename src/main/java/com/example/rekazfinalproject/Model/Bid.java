@@ -34,8 +34,9 @@ public class Bid {
     @NotNull(message = "Project budget should be not null")
     @Column(columnDefinition = "double not null")
     private double budget;
+
     @Column(columnDefinition = "varchar(20)")
-    private String status;
+    private String status = "pending";
 
     @ManyToOne
     @JsonIgnore

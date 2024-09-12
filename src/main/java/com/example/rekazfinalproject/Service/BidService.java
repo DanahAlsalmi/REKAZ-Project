@@ -24,7 +24,7 @@ public class BidService {
         return bidRepository.findAll();
     }
 
-    public void addBid( int investorId , int projectId , Bid bid) {
+    public void addBid( Integer investorId , Integer projectId , Bid bid) {
 
         Project project = projectRepository.findProjectById(projectId);
 
@@ -52,14 +52,15 @@ public class BidService {
             throw new ApiException("this project has a approved bid");
         }
 
+        bid.setStatus("pending");
         bid.setInvestor(investor);
-
         bid.setProject(project);
+
 
         bidRepository.save(bid);
     }
 
-    public void updateBid(int id , Bid bid) {
+    public void updateBid(Integer id , Bid bid) {
         Bid bid1 = bidRepository.findBidById(id);
 
         if(bid1==null){
@@ -77,7 +78,7 @@ public class BidService {
         bidRepository.save(bid1);
     }
 
-    public void deleteBid(int id) {
+    public void deleteBid(Integer id) {
         Bid bid = bidRepository.findBidById(id);
         if(bid==null){
             throw new ApiException("Bid not found");

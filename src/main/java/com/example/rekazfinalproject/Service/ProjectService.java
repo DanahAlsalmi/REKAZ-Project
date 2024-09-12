@@ -32,18 +32,17 @@ public class ProjectService {
     }
 
     // Suliman
-    public void addProject( int ownerId , Project project) {
+    public void addProject( Integer ownerId , Project project) {
         Owner owner = ownerRepository.findOwnerById(ownerId);
         if (owner == null) {
             throw new ApiException("Owner not found");
         }
         project.setOwner(owner);
-        project.setCreationDate(LocalDate.now());
         projectRepository.save(project);
     }
 
     // Suliman
-    public void updateProject(int id , Project project) {
+    public void updateProject(Integer id , Project project) {
         Project project1 = projectRepository.findProjectById(id);
         if (project1 == null) {
             throw new ApiException("Project not found");
@@ -58,7 +57,7 @@ public class ProjectService {
 
 
     // Suliman
-    public void deleteProject(int id) {
+    public void deleteProject(Integer id) {
 
         for (Contract contract : contractRepository.findAll() ) {
             if (contract.getProject().getId() == id) {
