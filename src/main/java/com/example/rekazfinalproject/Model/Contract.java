@@ -32,7 +32,8 @@ public class Contract {
     private LocalDate endDate ;
 
     @Column(columnDefinition = "varchar(20) not null")
-    private String status ;
+    @Enumerated(EnumType.STRING)
+    private ContractStatus status;
 
     @ManyToOne
     @JsonIgnore
@@ -46,6 +47,11 @@ public class Contract {
     @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;
+
+    public enum ContractStatus {
+        VALID,
+        EXPIRED
+    }
 
 
 }

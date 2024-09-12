@@ -38,6 +38,7 @@ public class ProjectService {
             throw new ApiException("Owner not found");
         }
         project.setOwner(owner);
+        project.setStatus(Project.ProjectStatus.IN_PROGRESS);
         projectRepository.save(project);
     }
 

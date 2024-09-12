@@ -46,8 +46,8 @@ public class Complaint {
 
     @Column(name = "status", length = 13, nullable = false)
     @NotEmpty(message = "Status cannot be empty")
-    @Pattern(regexp = "^(Under Review|Rejected|Resolved)$", message = "Status must be one of the following: Under Review, Rejected,Resolved")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ComplaintStatus status;
 
 
     @ManyToOne
@@ -58,4 +58,10 @@ public class Complaint {
     @ManyToOne
     @JsonIgnore
     private Owner owner;
+
+    public enum ComplaintStatus {
+        UNDER_REVIEW,
+        IN_PROGRESS,
+        RESOLVED
+    }
 }

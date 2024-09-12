@@ -50,4 +50,10 @@ public class UserController {
         return ResponseEntity.status(200).body("User activated successfully");
     }
 
+    @PutMapping("/discount/{adminId}/{ownerId}")
+    public ResponseEntity discountOwner(@PathVariable Integer adminId,@PathVariable Integer ownerId){
+        userService.discountOwner(adminId,ownerId);
+        return ResponseEntity.status(200).body("discount made to owner successfully");
+    }
+
 }

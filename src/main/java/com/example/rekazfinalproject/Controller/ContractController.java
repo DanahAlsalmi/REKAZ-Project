@@ -41,13 +41,13 @@ public class ContractController {
 //        return ResponseEntity.status(200).body("contract deleted successfully");
 //    }
 
-    @PostMapping("/contracts/{contractId}/{investorId}/approve")
+    @PostMapping("/{contractId}/{investorId}/approve")
     public ResponseEntity approveContract(@PathVariable Integer contractId, @PathVariable Integer investorId) {
         contractService.approveContract(contractId, investorId);
         return ResponseEntity.status(200).body("Contract approved successfully");
     }
 
-    @PostMapping("/contracts/{contractId}/{investorId}/reject")
+    @PostMapping("/{contractId}/{investorId}/reject")
     public ResponseEntity rejectContract(@PathVariable Integer contractId, @PathVariable Integer investorId) {
         contractService.rejectContract(contractId, investorId);
         return ResponseEntity.status(200).body("Contract rejected successfully");

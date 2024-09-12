@@ -132,19 +132,19 @@ public class OwnerService {
             throw new ApiException("this bid belong to another owner");
         }
 
-        if(bid.getProject().getStatus().equalsIgnoreCase("Closed")){
-            throw new ApiException("project for this bid already associated with a different bid");
+        if(bid.getProject().getStatus() == Project.ProjectStatus.COMPLETED) {
+            throw new ApiException("The project for this bid is already completed and associated with a different bid.");
         }
         // rejected bid can be approved ?
 //        if(bid.getStatus().equalsIgnoreCase("Rejected")){
 //            throw new ApiException("Rejected bid can't be approved");
 //        }
-        if(bid.getStatus().equalsIgnoreCase("Approved")){
-            throw new ApiException("bid is already approved");
+        if (bid.getStatus() == Bid.BidStatus.APPROVED) {
+            throw new ApiException("Bid is already approved");
         }
         Project project = projectRepository.findProjectById(bid.getProject().getId());
-        project.setStatus("Closed");
-        bid.setStatus("Approved");
+        project.setStatus(Project.ProjectStatus.COMPLETED);
+        bid.setStatus(Bid.BidStatus.APPROVED);
         bidRepository.save(bid);
     }
 
@@ -165,14 +165,15 @@ public class OwnerService {
         if(!bid.getProject().getOwner().equals(owner)){
             throw new ApiException("this bid belong to another owner");
         }
-        if(bid.getStatus().equalsIgnoreCase("Approved")){
+        if (bid.getStatus() == Bid.BidStatus.APPROVED) {
             throw new ApiException("Approved bid can't be rejected");
         }
-        if(bid.getStatus().equalsIgnoreCase("Rejected")){
-            throw new ApiException("bid is already rejected");
+        if (bid.getStatus() == Bid.BidStatus.REJECTED) {
+            throw new ApiException("Bid is already rejected");
         }
 
-        bid.setStatus("Rejected");
+        bid.setStatus(Bid.BidStatus.REJECTED);
+
         bidRepository.save(bid);
     }
 

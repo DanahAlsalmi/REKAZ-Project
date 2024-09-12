@@ -33,8 +33,8 @@ public class Consultation {
     @Column(columnDefinition = "DOUBLE not null")
     private double duration;
 
-    @Pattern(regexp = "^(Pending|Scheduled|Completed|Canceled)$" , message = "status has three valid inputs only,Pending, Scheduled, Completed or Canceled!")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ConsultationStatus status;
 
 
 
@@ -48,6 +48,12 @@ public class Consultation {
     @ManyToOne
     @JsonIgnore
     private Owner owner;
+
+    public enum ConsultationStatus {
+        IN_PROGRESS,
+        COMPLETED,
+        CANCELED
+    }
 
 
 }

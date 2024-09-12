@@ -36,7 +36,8 @@ public class Bid {
     private double budget;
 
     @Column(columnDefinition = "varchar(20)")
-    private String status = "pending";
+    @Enumerated(EnumType.STRING)
+    private BidStatus status;
 
     @ManyToOne
     @JsonIgnore
@@ -46,6 +47,13 @@ public class Bid {
     @ManyToOne
     @JsonIgnore
     private Investor investor;
+
+
+    public enum BidStatus {
+        PENDING,
+        APPROVED,
+        REJECTED
+    }
 
 
 

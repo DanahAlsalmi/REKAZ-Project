@@ -100,8 +100,8 @@ public class InvestorService {
 
         // when bid is approved other investors cannot add bids
 
-        if(project.getStatus().equalsIgnoreCase("Closed")){
-            throw new ApiException("this project has a approved bid");
+        if (project.getStatus() == Project.ProjectStatus.COMPLETED) {
+            throw new ApiException("This project has an approved bid.");
         }
 
         bid.setInvestor(investor);
@@ -129,7 +129,7 @@ public class InvestorService {
             throw new ApiException("Bid not found");
         }
 
-        if(bid1.getStatus().equalsIgnoreCase("Approved")){
+        if(bid1.getStatus()== Bid.BidStatus.APPROVED){
             throw new ApiException("Approved Bid cannot be edited");
         }
 

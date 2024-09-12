@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
+
 
 @Entity
 @NoArgsConstructor
@@ -37,9 +39,18 @@ public class Owner {
 
     private LocalDate createdAt;
 
+    private double discountPercentage = 0 ;
+
+    @OneToMany(cascade = CascadeType.ALL , mappedBy = "owner")
+    private Set<Project> projects;
+
+
     @OneToOne
     @MapsId
     @JsonIgnore
     private User user;
+
+//    @OneToMany(cascade = CascadeType.ALL , mappedBy = "owner")
+//    private Set<Project> projects;
 
 }

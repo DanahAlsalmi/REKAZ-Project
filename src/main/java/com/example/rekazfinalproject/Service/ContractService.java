@@ -7,7 +7,6 @@ import com.example.rekazfinalproject.Repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -52,12 +51,24 @@ public class ContractService {
         if(ownerUser.isActive()==false){
             throw new ApiException("owner is not active");
         }
-        Bid bid=bidRepository.findBidById(projectId);
+//        Bid bid=bidRepository.findBidById(projectId);
+        Bid bid = new Bid();
 
-        if (!bid.getStatus().equalsIgnoreCase("Approved")){
-            throw new ApiException("bid not approved");
+        for(Bid bid1 : bidRepository.findAll()){
+            if(bid1.getProject()==project){
+                bid=bid1 ;
+            }
         }
-        Contract contract = new Contract(null,contractDTO.getTerms(), LocalDate.now(),contractDTO.getEndDate(),contractDTO.getStatus(),investor,owner,project);
+
+        if(bid==null){
+            throw new ApiException("bid not found");
+        }
+
+        if (bid.getStatus() != Bid.BidStatus.APPROVED) {
+            throw new ApiException("Bid not approved");
+        }
+
+        Contract contract = new Contract(null,contractDTO.getTerms(), contractDTO.getStartDate() ,contractDTO.getEndDate(), Contract.ContractStatus.valueOf(contractDTO.getStatus().toUpperCase()),investor,owner,project);
         contractRepository.save(contract);
 
     }
@@ -96,13 +107,14 @@ public class ContractService {
             throw new ApiException("Contract not found");
         }
 
-        if ("APPROVED".equalsIgnoreCase(contract.getStatus())) {
-            throw new ApiException("Contract is already approved");
-        } else if ("REJECTED".equalsIgnoreCase(contract.getStatus())) {
-            throw new ApiException("Contract has been rejected");
+        if (contract.getStatus() == Contract.ContractStatus.VALID) {
+            throw new ApiException("Contract is already Valid");
+        } else if (contract.getStatus() == Contract.ContractStatus.EXPIRED) {
+            throw new ApiException("Contract has been Expired");
         }
 
-        contract.setStatus("APPROVED");
+        contract.setStatus(Contract.ContractStatus.VALID);
+
 //        contract.setApprovalDate(LocalDate.now()); // Record the approval date
         contractRepository.save(contract);
     }
@@ -119,14 +131,24 @@ public class ContractService {
             throw new ApiException("Contract not found");
         }
 
-        if ("APPROVED".equalsIgnoreCase(contract.getStatus())) {
-            throw new ApiException("Contract is already approved");
-        } else if ("REJECTED".equalsIgnoreCase(contract.getStatus())) {
-            throw new ApiException("Contract has been rejected");
+        if (contract.getStatus() == Contract.ContractStatus.VALID) {
+            throw new ApiException("Contract is already Valid");
+        } else if (contract.getStatus() == Contract.ContractStatus.EXPIRED) {
+            throw new ApiException("Contract has been Expired");
         }
-        contract.setStatus("REJECTED");
+
+        contract.setStatus(Contract.ContractStatus.EXPIRED);
 //        contract.setRejectionDate(LocalDate.now()); // Record the rejection date if needed
         contractRepository.save(contract);
+    }
+
+
+    public List<Contract> MyContract(Integer userId){
+        User user = userRepository.findUserById(userId);
+        if(user==null){
+            throw new ApiException("user not found");
+        }
+        return contractRepository.findAllByUserId(userId);
     }
 
 

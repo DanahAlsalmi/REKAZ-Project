@@ -3,7 +3,9 @@ package com.example.rekazfinalproject.Controller;
 
 import com.example.rekazfinalproject.Api.ApiResponse;
 import com.example.rekazfinalproject.DTO.InvestorDTO;
+import com.example.rekazfinalproject.Model.AvailableDate;
 import com.example.rekazfinalproject.Model.Bid;
+import com.example.rekazfinalproject.Service.AvailableDateService;
 import com.example.rekazfinalproject.Service.BidService;
 import com.example.rekazfinalproject.Service.InvestorService;
 import jakarta.validation.Valid;
@@ -18,7 +20,7 @@ public class InvestorController {
 
     //*** All CRUD Done by Danah ****
     private final InvestorService investorService;
-    private final BidService bidService;
+    private final AvailableDateService availableDateService;
 
     @GetMapping("/get")
     public ResponseEntity getAllInvestor(){
@@ -55,4 +57,11 @@ public class InvestorController {
         investorService.editBid(investorId,bidId,bid);
         return ResponseEntity.status(200).body(new ApiResponse("Bid edited successfully"));
     }
+
+    @PostMapping("/add-available-date/{investorId}")
+    public ResponseEntity addAvailableDate( @PathVariable int investorId , @Valid @RequestBody AvailableDate availableDate) {
+        availableDateService.addAvailableDate(investorId,availableDate);
+        return ResponseEntity.status(200).body(new ApiResponse("Available date added successfully"));
+    }
+
 }

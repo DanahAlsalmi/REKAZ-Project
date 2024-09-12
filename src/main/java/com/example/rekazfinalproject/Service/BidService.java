@@ -48,11 +48,11 @@ public class BidService {
 
         // when bid is approved other investors cannot add bids
 
-        if(project.getStatus().equalsIgnoreCase("closed")){
-            throw new ApiException("this project has a approved bid");
+        if (project.getStatus() == Project.ProjectStatus.COMPLETED) {
+            throw new ApiException("This project already has an approved bid.");
         }
 
-        bid.setStatus("pending");
+        bid.setStatus(Bid.BidStatus.PENDING);
         bid.setInvestor(investor);
         bid.setProject(project);
 
@@ -67,7 +67,7 @@ public class BidService {
             throw new ApiException("Bid not found");
         }
 
-        if(bid.getStatus().equalsIgnoreCase("approved")){
+        if(bid.getStatus()== Bid.BidStatus.APPROVED){
             throw new ApiException("Approved Bid cannot be updated");
         }
 
@@ -83,7 +83,7 @@ public class BidService {
         if(bid==null){
             throw new ApiException("Bid not found");
         }
-        if(bid.getStatus().equalsIgnoreCase("approved")){
+        if(bid.getStatus()==Bid.BidStatus.APPROVED){
             throw new ApiException("Approved Bid cannot be deleted");
         }
         bidRepository.delete(bid);

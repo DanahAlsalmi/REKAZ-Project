@@ -50,7 +50,9 @@ public class Project {
     private LocalDate deadline;
 
     @Column(columnDefinition = "varchar(20)")
-    private String status = "open" ;
+
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
 
     @ManyToOne
     @JsonIgnore
@@ -66,6 +68,11 @@ public class Project {
     @OneToOne( cascade = CascadeType.ALL , mappedBy = "project" )
     private Contract contract ;
 
+
+    public enum ProjectStatus {
+        IN_PROGRESS,
+        COMPLETED
+    }
 
 
 
