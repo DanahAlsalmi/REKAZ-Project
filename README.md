@@ -45,6 +45,7 @@ Models:
 . 12 - createReport <br/>
 . 13 - getReportsByProjectId <br/>
 . 14 - activateUser <br/>
+. 15 - getMyProperty <br/>
 
 
 DTO :
