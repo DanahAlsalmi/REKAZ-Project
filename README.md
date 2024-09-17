@@ -31,7 +31,7 @@ Models:
   - Investor + CRUD + Security
   - Report + CRUD + Security
   - Evaluation +CRUD + Security
-. 1 - addContract
+. 1 - addContract/n
 . 2 - approveContract
 . 3 - rejectContract
 . 4 - getEvaluationById
