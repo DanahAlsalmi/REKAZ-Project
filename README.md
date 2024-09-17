@@ -30,21 +30,21 @@ Models:
   - Owner + CRUD + Security
   - Investor + CRUD + Security
   - Report + CRUD + Security
-  - Evaluation +CRUD + Security
-. 1 - addContract/n
-. 2 - approveContract
-. 3 - rejectContract
-. 4 - getEvaluationById
-. 5 - sendEvaluationRequest
-. 6 - respondToEvaluation
-. 7 - registerInvestor
-. 8 - getInvestorProject
-. 9 - registerOwner
-. 10 - findByCity
-. 11 - findByProjectType
-. 12 - createReport
-. 13 - getReportsByProjectId
-. 14 - activateUser
+  - Evaluation +CRUD + Security<br/>
+. 1 - addContract <br/>
+. 2 - approveContract <br/>
+. 3 - rejectContract <br/>
+. 4 - getEvaluationById <br/>
+. 5 - sendEvaluationRequest <br/>
+. 6 - respondToEvaluation <br/>
+. 7 - registerInvestor <br/>
+. 8 - getInvestorProject <br/>
+. 9 - registerOwner <br/>
+. 10 - findByCity <br/>
+. 11 - findByProjectType <br/>
+. 12 - createReport <br/>
+. 13 - getReportsByProjectId <br/>
+. 14 - activateUser <br/>
 
 DTO :
   - InvestorDTO
