@@ -12,6 +12,8 @@ Description :  This platform streamlines real estate investment management by ha
 
 Figma URL : 
 
+https://www.figma.com/design/jgrPInxXnoblByK2QaDEa5/%D8%B1%D9%90%D9%83%D8%A7%D8%B2%2FRekaz?node-id=0-1&t=SiJrmo4K3ia9cZpt-1
+
 UML :
 
 <img width="1361" alt="Screenshot 2024-09-17 at 1 19 58 PM" src="https://github.com/user-attachments/assets/346418bc-bbbb-475c-91a3-ef26cf421813">
