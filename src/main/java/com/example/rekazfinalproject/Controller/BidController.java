@@ -1,19 +1,23 @@
 package com.example.rekazfinalproject.Controller;
 
 
+import com.example.rekazfinalproject.Api.ApiResponse;
 import com.example.rekazfinalproject.Model.Bid;
+import com.example.rekazfinalproject.Model.User;
 import com.example.rekazfinalproject.Service.BidService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/bid")
 
+    // All CRUD by suliman
 
-public class BidController {
+    public class BidController {
 
     private final BidService bidService;
 
@@ -22,21 +26,37 @@ public class BidController {
         return ResponseEntity.status(200).body(bidService.findAllBids());
     }
 
-    @PostMapping("/add-bid/{investorId}/{projectId}")
-    public ResponseEntity addBid(@PathVariable Integer investorId  , @PathVariable Integer projectId , @Valid @RequestBody Bid bid) {
-        bidService.addBid(investorId,projectId,bid);
-        return ResponseEntity.status(200).body("Bid added");
+    @PostMapping("/add-bid/{projectId}")
+    public ResponseEntity addBid(@AuthenticationPrincipal User user , @PathVariable int projectId  , @Valid @RequestBody Bid bid  ) {
+        bidService.addBid(user.getInvestor().getId(), projectId, bid);
+        return ResponseEntity.status(200).body(new ApiResponse("Bid added successfully"));
+
     }
 
-    @PutMapping("/update-bid/{id}")
-    public ResponseEntity updateBid(@PathVariable Integer id, @Valid  @RequestBody Bid bid) {
-        bidService.updateBid(id,bid);
-        return ResponseEntity.status(200).body("Bid updated");
+    @PutMapping("/edit-bid/{projectId}")
+    public ResponseEntity editBid( @AuthenticationPrincipal User user , @PathVariable Integer projectId, @Valid  @RequestBody Bid bid) {
+        bidService.editBid(user.getInvestor().getId() , projectId ,bid);
+        return ResponseEntity.status(200).body(new ApiResponse("Bid edited successfully"));
     }
 
-    @DeleteMapping("/delete-bid/{id}")
-    public ResponseEntity deleteBid(@PathVariable Integer id) {
-        bidService.deleteBid(id);
-        return ResponseEntity.status(200).body("Bid deleted");
+    @DeleteMapping("/delete-bid/{bidId}")
+    public ResponseEntity deleteBid( @AuthenticationPrincipal User user , @PathVariable Integer bidId) {
+        bidService.deleteBid( user.getInvestor().getId() , bidId );
+        return ResponseEntity.status(200).body(new ApiResponse("Bid deleted successfully"));
     }
+
+    @GetMapping("/get-project-bids/{projectId}")
+    public ResponseEntity getProjectBids(@AuthenticationPrincipal User user , @PathVariable int projectId) {
+
+        return ResponseEntity.status(200).body(bidService.getProjectBids(user.getId(),projectId));
+    }
+
+    // Suliman
+    @GetMapping("/get-my-bids")
+    public ResponseEntity getMyBids(@AuthenticationPrincipal User user ) {
+
+        return ResponseEntity.status(200).body(bidService.getMyBids(user.getId()));
+    }
+
+
 }

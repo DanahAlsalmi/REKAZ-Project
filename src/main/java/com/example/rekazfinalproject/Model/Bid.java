@@ -28,6 +28,7 @@ public class Bid {
     @Column(columnDefinition = "varchar(100) not null")
     private String description;
 
+    @NotNull(message = "Project deadline should be not null")
     @Column(columnDefinition = "datetime")
     private LocalDate deadline;
 
@@ -39,6 +40,11 @@ public class Bid {
     @Enumerated(EnumType.STRING)
     private BidStatus status;
 
+        
+    @Column(columnDefinition = "varchar(500)")
+    private String comment ;
+
+    
     @ManyToOne
     @JsonIgnore
     private Project project ;

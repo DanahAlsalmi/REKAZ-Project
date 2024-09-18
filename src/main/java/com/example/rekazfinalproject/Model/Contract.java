@@ -44,11 +44,11 @@ public class Contract {
     private Owner owner ;
 
     @OneToOne
-    @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;
 
     public enum ContractStatus {
+        PENDING,
         VALID,
         EXPIRED
     }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,6 +42,9 @@ public class Investor {
     @PastOrPresent(message = "Creation date must be in the past or today")
     private LocalDate createdAt;
 
+    @Column(columnDefinition = "double")
+    private double rate ;
+
     @OneToOne
     @MapsId
     @JsonIgnore
@@ -63,6 +67,13 @@ public class Investor {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "investor")
     private Set<Complaint> complaints;
+
+    @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL)
+    private List<Report> reports;
+
+    @OneToMany(mappedBy = "investor")
+    private List<Evaluation> evaluations;
+
 
 
 

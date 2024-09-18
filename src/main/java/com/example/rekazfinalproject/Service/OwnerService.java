@@ -2,15 +2,10 @@ package com.example.rekazfinalproject.Service;
 
 import com.example.rekazfinalproject.Api.ApiException;
 import com.example.rekazfinalproject.DTO.OwnerDTO;
-import com.example.rekazfinalproject.Model.Bid;
-import com.example.rekazfinalproject.Model.Owner;
-import com.example.rekazfinalproject.Model.Project;
-import com.example.rekazfinalproject.Model.User;
-import com.example.rekazfinalproject.Repository.BidRepository;
-import com.example.rekazfinalproject.Repository.OwnerRepository;
-import com.example.rekazfinalproject.Repository.ProjectRepository;
-import com.example.rekazfinalproject.Repository.UserRepository;
+import com.example.rekazfinalproject.Model.*;
+import com.example.rekazfinalproject.Repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +21,8 @@ public class OwnerService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final BidRepository bidRepository;
+    private final InvestorRepository investorRepository;
+    private final ContractRepository contractRepository;
 
 
     //*** All CRUD Done by Danah ****
@@ -37,7 +34,8 @@ public class OwnerService {
         // Create and populate User entity
         User user = new User();
         user.setUsername(ownerDTO.getUsername());
-        user.setPassword(ownerDTO.getPassword());
+        String hash = new BCryptPasswordEncoder().encode(ownerDTO.getPassword());
+        user.setPassword(hash);
         user.setEmail(ownerDTO.getEmail());
         user.setRole("OWNER");
 
@@ -51,15 +49,13 @@ public class OwnerService {
 
         user.setOwner(owner);
 
-        // Save User and Owner
         userRepository.save(user);
     }
 
     public void updateOwner(Integer id, OwnerDTO ownerDTO) {
         Owner owner = ownerRepository.findOwnerById(id);
-        if (owner == null) {
-            throw new ApiException("Owner not found");
-        }
+
+
 
         owner.setCommercialRegister(ownerDTO.getCommercialRegister());
         owner.setScopeOfWork(ownerDTO.getScopeOfWork());
@@ -68,32 +64,33 @@ public class OwnerService {
 
         User user = owner.getUser();
         user.setUsername(ownerDTO.getUsername());
-        user.setPassword(ownerDTO.getPassword());
+        String hash = new BCryptPasswordEncoder().encode(ownerDTO.getPassword());
+        user.setPassword(hash);
         user.setEmail(ownerDTO.getEmail());
+        user.setActive(true);
         userRepository.save(user);
     }
 
     public void deleteOwner(Integer id) {
         User owner = userRepository.findUserById(id);
-        if (owner == null) {
-            throw new ApiException("Owner not found");
-        }
+
         userRepository.delete(owner);
     }
 
-    // Suliman
+    //Danah
+    public List<Investor> getInvestorsWithContract(Integer id) {
+        User user = userRepository.findUserById(id);
+        List<Contract> contracts = contractRepository.findContractsByOwnerId(id);
 
-    public void addProject( Integer ownerId , Project project) {
-        Owner owner = ownerRepository.findOwnerById(ownerId);
-        if (owner == null) {
-            throw new ApiException("Owner not found");
+        List<Investor> investors = new ArrayList<>();
+        for (Contract contract : contracts) {
+            Investor investor = contract.getInvestor();
+            if (!investors.contains(investor)) {
+                investors.add(investor);
+            }
         }
-        if(!owner.getUser().isActive()){
-            throw new ApiException("User is not active");
-        }
-        project.setOwner(owner);
-        project.setCreationDate(LocalDate.now());
-        projectRepository.save(project);
+
+        return investors;
     }
 
     // Suliman
@@ -101,30 +98,31 @@ public class OwnerService {
     public List<Project> getMyProjects(Integer ownerId) {
         List<Project> myProjects = new ArrayList<>();
         Owner owner = ownerRepository.findOwnerById(ownerId);
-        if (owner == null) {
-            throw new ApiException("Owner not found");
-        }
+
         for(Project project : projectRepository.findAll()){
             if (project.getOwner().equals(owner)) {
                 myProjects.add(project);
             }
         }
-        if (myProjects.size() == 0) {
+        if (myProjects.isEmpty()) {
             throw new ApiException("Owner doesn't have any projects");
         }
         return myProjects;
     }
 
+
+
     // Suliman
     public void approveBid( Integer ownerId , Integer bidId){
         Owner owner = ownerRepository.findOwnerById(ownerId);
-        if (owner == null) {
-            throw new ApiException("Owner not found");
-        }
+
         if(!owner.getUser().isActive()){
             throw new ApiException("User is not active");
         }
         Bid bid = bidRepository.findBidById(bidId);
+        if(bid.getProject().getOwner().getId() != owner.getId()){
+            throw new ApiException("User id mismatch");
+        }
         if (bid == null) {
             throw new ApiException("Bid not found");
         }
@@ -135,36 +133,37 @@ public class OwnerService {
         if(bid.getProject().getStatus() == Project.ProjectStatus.COMPLETED) {
             throw new ApiException("The project for this bid is already completed and associated with a different bid.");
         }
-        // rejected bid can be approved ?
-//        if(bid.getStatus().equalsIgnoreCase("Rejected")){
-//            throw new ApiException("Rejected bid can't be approved");
-//        }
+
         if (bid.getStatus() == Bid.BidStatus.APPROVED) {
             throw new ApiException("Bid is already approved");
         }
-        Project project = projectRepository.findProjectById(bid.getProject().getId());
-        project.setStatus(Project.ProjectStatus.COMPLETED);
+       Project project = projectRepository.findProjectById(bid.getProject().getId());
+        project.setInvestor(bid.getInvestor());
+        project.setStatus(Project.ProjectStatus.IN_PROGRESS);
         bid.setStatus(Bid.BidStatus.APPROVED);
         bidRepository.save(bid);
     }
 
     // Suliman
 
-    public void rejectBid( Integer ownerId , int bidId){
+    public void rejectBid( int ownerId , int bidId , String comment ){
         Owner owner = ownerRepository.findOwnerById(ownerId);
-        if (owner == null) {
-            throw new ApiException("Owner not found");
-        }
+
         if(!owner.getUser().isActive()){
             throw new ApiException("User is not active");
         }
         Bid bid = bidRepository.findBidById(bidId);
+        if(bid.getProject().getOwner().getId() != owner.getId()){
+            throw new ApiException("User id mismatch");
+        }
         if (bid == null) {
             throw new ApiException("Bid not found");
         }
         if(!bid.getProject().getOwner().equals(owner)){
             throw new ApiException("this bid belong to another owner");
         }
+
+
         if (bid.getStatus() == Bid.BidStatus.APPROVED) {
             throw new ApiException("Approved bid can't be rejected");
         }
@@ -172,9 +171,18 @@ public class OwnerService {
             throw new ApiException("Bid is already rejected");
         }
 
+
+        
         bid.setStatus(Bid.BidStatus.REJECTED);
+        bid.setComment(comment);
 
         bidRepository.save(bid);
     }
+
+
+
+
+
+
 
 }

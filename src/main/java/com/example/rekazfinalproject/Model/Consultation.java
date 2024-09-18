@@ -12,26 +12,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+//*** All Done by Shahad ****
 public class Consultation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "Consultation date should not be Empty!")
-    @JsonFormat(pattern= "yyyy-MM-dd")
-    @FutureOrPresent
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @Column(columnDefinition = "datetime not null")
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     @NotNull(message = "Duration should not be null!")
     @Column(columnDefinition = "DOUBLE not null")
     private double duration;
+
+    //consultation fee=60;
+    @Column(columnDefinition = "DOUBLE not null")
+    private double consultationFee;
 
     @Enumerated(EnumType.STRING)
     private ConsultationStatus status;
@@ -51,9 +55,9 @@ public class Consultation {
 
     public enum ConsultationStatus {
         IN_PROGRESS,
-        COMPLETED,
         CANCELED
     }
 
 
 }
+
