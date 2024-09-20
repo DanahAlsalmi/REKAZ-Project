@@ -4,7 +4,7 @@
 
 
 
-Name : Danah Alsalmi , Phone : 0541082018 , Project Name : REKAZ
+Name : Danah Alsalmi  , Project Name : REKAZ
 
 Description :  This platform streamlines real estate investment management by handling properties, investor relations, contracts, and subscriptions. It also supports evaluations, ratings, user complaints, bids, and consultations, offering a comprehensive solution for efficient investment management.
 
